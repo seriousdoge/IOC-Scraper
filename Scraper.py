@@ -52,7 +52,7 @@ for url in urls:
         except:
             pass
     # Remove excluded domains
-    domain_names = [domain for domain in domain_names if domain not in excluded_domains]
+    domain_names = [domain for domain in valid_domains if domain not in excluded_domains]
     # Remove duplicate domain names
     domain_names = list(dict.fromkeys(domain_names))
 
