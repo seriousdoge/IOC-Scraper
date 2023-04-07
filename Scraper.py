@@ -1,3 +1,4 @@
+from datetime import datetime
 import re
 import csv
 import requests
@@ -8,12 +9,15 @@ from tld import get_tld, update_tld_names
 campaign_name = input('Enter a campaign name: ')
 urls = input('Enter a list of URLs to scrape, separated by commas: ').split(',')
 excluded_domains = input('Enter a comma-separated list of domain names to be excluded(blank when none): ').split(',')
-csv_filename = input('Enter a filename for the CSV: ')
+
+now = datetime.now()
+date_time=now.strftime("%Y-%m-%d %H%M%S")
+filename = f"{campaign_name}_{date_time}.csv"
 
 # Update the TLD list
 update_tld_names()
 
-# Variables to store the results
+#Variables to store the results
 hashes = []
 ip_addresses = []
 domain_names = []
@@ -35,6 +39,7 @@ for url in urls:
     ip_addr = re.findall(r'\b((?!0)\d{1,2}|1\d{2}|2[0-4]\d|25[0-5])\.((?!0)\d{1,2}|1\d{2}|2[0-4]\d|25[0-5])\.((?!0)\d{1,2}|1\d{2}|2[0-4]\d|25[0-5])\.((?!0)\d{1,2}|1\d{2}|2[0-4]\d|25[0-5])\b', text)
     ips = ['.'.join(match) for match in ip_addr]
     ip_addresses.extend([re.sub(r'[\[\]\(\)]', '', ips) for ips in ips])
+    ip_addresses = list(dict.fromkeys(ip_addresses))
 
     # Find all domain names in the page text
     domain_pattern = r'\b(?:[a-zA-Z0-9]+(?:-+[a-zA-Z0-9]+)*\.)+[a-zA-Z]{2,}\b'
@@ -56,8 +61,10 @@ for url in urls:
     # Remove duplicate domain names
     domain_names = list(dict.fromkeys(domain_names))
 
+    
+
 # Write the results to a CSV file
-with open(csv_filename, 'w', newline='') as f:
+with open(filename, 'w', newline='') as f:
     writer = csv.writer(f)
     writer.writerow(['Campaign Name', 'References', 'Hashes', 'IP Addresses', 'Domains'])
     max_rows = max(len(hashes) if hashes else 0, len(ip_addresses) if ip_addresses else 0, len(domain_names if domain_names else 0))
