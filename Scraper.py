@@ -54,7 +54,7 @@ for url in urls:
     # Remove excluded domains
     domain_names = [domain for domain in domain_names if domain not in excluded_domains]
     # Remove duplicate domain names
-    domain_names = list(dict.fromkeys(valid_domains))
+    domain_names = list(dict.fromkeys(domain_names))
 
 # Write the results to a CSV file
 with open(csv_filename, 'w', newline='') as f:
