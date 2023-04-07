@@ -13,7 +13,7 @@ csv_filename = input('Enter a filename for the CSV: ')
 # Update the TLD list
 update_tld_names()
 
-#Variables to store the results
+# Variables to store the results
 hashes = []
 ip_addresses = []
 domain_names = []
@@ -51,11 +51,10 @@ for url in urls:
             valid_domains.append(domain)
         except:
             pass
-
+    # Remove excluded domains
+    domain_names = [domain for domain in domain_names if domain not in excluded_domains]
     # Remove duplicate domain names
     domain_names = list(dict.fromkeys(valid_domains))
-
-    
 
 # Write the results to a CSV file
 with open(csv_filename, 'w', newline='') as f:
